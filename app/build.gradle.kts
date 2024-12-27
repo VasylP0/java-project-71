@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass.set("hexlet.code.App") // Replace "hexlet.code.Main" with your actual Main class name if different
+    mainClass.set("hexlet.code.App")
 }
 
 group = "hexlet.code"
@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    implementation("info.picocli:picocli:4.7.0")
 }
 
 tasks.test {
