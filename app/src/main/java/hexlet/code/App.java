@@ -1,13 +1,17 @@
 package hexlet.code;
 
-import picocli.CommandLine;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
 @Command(
         name = "gendiff",
-        mixinStandardHelpOptions = true, // Добавляет -h и -V автоматически
+        mixinStandardHelpOptions = true, // Enables -h and -V options
         version = "gendiff 1.0",
         description = "Compares two configuration files and shows a difference."
 )
@@ -24,13 +28,34 @@ public class App implements Runnable {
 
     @Override
     public void run() {
-        // Пока мы не реализуем логику сравнения, выводим переданные параметры
-        System.out.printf("Comparing files: %s and %s%n", filepath1, filepath2);
-        System.out.printf("Selected format: %s%n", format);
+        try {
+            // Reading and parsing JSON files
+            Map<String, Object> data1 = readJsonFile(filepath1);
+            Map<String, Object> data2 = readJsonFile(filepath2);
+
+            // Print parsed data for debugging
+            System.out.println("File 1 Data: " + data1);
+            System.out.println("File 2 Data: " + data2);
+
+            // Placeholder for comparison logic
+            System.out.printf("Comparing files: %s and %s%n", filepath1, filepath2);
+            System.out.printf("Selected format: %s%n", format);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions at the top level
+        }
+    }
+
+    public static Map<String, Object> readJsonFile(String filePath) throws Exception {
+        System.out.println("Reading file: " + filePath); // Debugging statement
+        String content = Files.readString(Paths.get(filePath));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(content, Map.class);
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new App()).execute(args);
+        int exitCode = new picocli.CommandLine(new App()).execute(args);
         System.exit(exitCode);
     }
 }
