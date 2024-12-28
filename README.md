@@ -17,3 +17,4 @@ Clone the repository:
 ```bash
 git clone https://github.com/VasylP0/java-project-71.git
 
+[![asciicast](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ.svg)](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ)
