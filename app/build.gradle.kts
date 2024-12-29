@@ -22,6 +22,7 @@ dependencies {
     implementation("info.picocli:picocli:4.7.0") // CLI library
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0") // Testing
     testImplementation("org.assertj:assertj-core:3.24.2") // AssertJ for fluent assertions
+    implementation("org.jetbrains:annotations:24.0.1")
 }
 
 tasks.test {

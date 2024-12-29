@@ -20,3 +20,5 @@ git clone https://github.com/VasylP0/java-project-71.git
 [![asciicast](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ.svg)](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ)
 
 [![asciicast](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ.svg)](https://asciinema.org/a/lgW6yRq5T7HS8tJWWVW5sDMZQ)
+
+[![asciicast](https://asciinema.org/a/H2cTdfcCSdmDvX9W60Lo5SyOj.svg)](https://asciinema.org/a/H2cTdfcCSdmDvX9W60Lo5SyOj)
