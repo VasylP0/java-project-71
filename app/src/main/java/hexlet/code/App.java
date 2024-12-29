@@ -23,7 +23,7 @@ public class App implements Callable<Integer> {
     public Integer call() {
         try {
             // Generate and print the diff
-            String diff = Differ.generate(filepath1, filepath2);
+            String diff = Differ.generate(filepath1, filepath2, "stylish");
             System.out.println(diff);
             return 0; // Exit code 0 indicates success
         } catch (Exception e) {
