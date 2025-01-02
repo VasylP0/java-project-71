@@ -1,0 +1,15 @@
+[
+  {
+    "key": "chars2",
+    "status": "updated",
+    "oldValue": ["d", "e", "f"],
+    "newValue": false
+  },
+  {
+    "key": "checked",
+    "status": "updated",
+    "oldValue": false,
+    "newValue": true
+  },
+  ...
+]
