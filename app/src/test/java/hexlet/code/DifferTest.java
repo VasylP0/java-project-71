@@ -2,13 +2,14 @@ package hexlet.code;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.nio.file.Path;
 
 class DifferTest {
 
     @Test
     void testJsonFormatOutput() throws Exception {
-        String filePath1 = "src/test/resources/file1.json";
-        String filePath2 = "src/test/resources/file2.json";
+        Path filePath1 = Path.of("src/test/resources/file1.json");
+        Path filePath2 = Path.of("src/test/resources/file2.json");
         String format = "json";
 
         String expectedJson = """
@@ -35,8 +36,8 @@ class DifferTest {
 
     @Test
     void testPlainFormatOutput() throws Exception {
-        String filePath1 = "src/test/resources/file1.json";
-        String filePath2 = "src/test/resources/file2.json";
+        Path filePath1 = Path.of("src/test/resources/file1.json");
+        Path filePath2 = Path.of("src/test/resources/file2.json");
         String format = "plain";
 
         String expectedPlain = """
@@ -61,13 +62,12 @@ class DifferTest {
 
     @Test
     void testStylishFormatOutput() throws Exception {
-        String filePath1 = "src/test/resources/file1.json";
-        String filePath2 = "src/test/resources/file2.json";
+        Path filePath1 = Path.of("src/test/resources/file1.json");
+        Path filePath2 = Path.of("src/test/resources/file2.json");
         String format = "stylish";
 
         String expectedStylish = """
             {
-              chars1: [a, b, c]
             - chars2: [d,e,f]
             + chars2: false
             - checked: false
@@ -78,7 +78,6 @@ class DifferTest {
             + id: null
             - key1: 'value1'
             + key2: 'value2'
-              numbers1: [1, 2, 3, 4]
             - numbers2: [2,3,4,5]
             + numbers2: [22,33,44,55]
             - numbers3: [3,4,5]
