@@ -2,7 +2,7 @@ package hexlet.code.formatters;
 
 import java.util.List;
 import java.util.Map;
-import hexlet.code.DiffNode; // Ensure this matches the package where DiffNode is located.
+import hexlet.code.DiffNode;
 
 public class StylishFormatter {
     public static String format(List<DiffNode> diffNodes) {
@@ -50,13 +50,16 @@ public class StylishFormatter {
 
     private static String formatValue(Object value) {
         if (value == null) {
-            return "null"; // Explicitly handle null values
+            return "null";
         }
-        if (value instanceof List || value instanceof Map) {
+        if (value instanceof List) {
+            return value.toString().replace(", ", ",");
+        }
+        if (value instanceof Map) {
             return value.toString().replace(", ", ",").replace("=", ": ");
         }
         if (value instanceof String) {
-            return "'" + value + "'"; // Add quotes around strings
+            return "'" + value + "'";
         }
         return value.toString();
     }

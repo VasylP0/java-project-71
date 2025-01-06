@@ -1,47 +1,99 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DifferTest {
 
     @Test
-    void testJsonFormat() throws Exception {
-        // Define file paths
+    void testJsonFormatOutput() throws Exception {
         String filePath1 = "src/test/resources/file1.json";
         String filePath2 = "src/test/resources/file2.json";
-        String format = "json"; // Ensure the format is specified here
-        String expectedJsonPath = "expectedJsonResult.json";
+        String format = "json";
 
-        // Ensure files exist
-        assert Files.exists(Path.of(filePath1)) : "File 1 does not exist!";
-        assert Files.exists(Path.of(filePath2)) : "File 2 does not exist!";
-        assert Files.exists(Path.of(DifferTest.class.getClassLoader().getResource(expectedJsonPath).toURI())) : "Expected JSON result file does not exist!";
+        String expectedJson = """
+            [
+                {"key":"chars2","oldValue":["d","e","f"],"newValue":false,"status":"updated"},
+                {"key":"checked","oldValue":false,"newValue":true,"status":"updated"},
+                {"key":"default","oldValue":null,"newValue":["value1","value2"],"status":"updated"},
+                {"key":"id","oldValue":45,"newValue":null,"status":"updated"},
+                {"key":"key1","oldValue":"value1","newValue":null,"status":"removed"},
+                {"key":"key2","oldValue":null,"newValue":"value2","status":"added"},
+                {"key":"numbers2","oldValue":[2,3,4,5],"newValue":[22,33,44,55],"status":"updated"},
+                {"key":"numbers3","oldValue":[3,4,5],"newValue":null,"status":"removed"},
+                {"key":"numbers4","oldValue":null,"newValue":[4,5,6],"status":"added"},
+                {"key":"obj1","oldValue":null,"newValue":{"nestedKey":"value","isNested":true},"status":"added"},
+                {"key":"setting1","oldValue":"Some value","newValue":"Another value","status":"updated"},
+                {"key":"setting2","oldValue":200,"newValue":300,"status":"updated"},
+                {"key":"setting3","oldValue":true,"newValue":"none","status":"updated"}
+            ]
+        """;
 
-        // Read the content of file1.json and file2.json
-        String file1Content = new String(Files.readAllBytes(Path.of(filePath1)));
-        String file2Content = new String(Files.readAllBytes(Path.of(filePath2)));
-
-        // Generate the result with the correct method signature
         String result = Differ.generate(filePath1, filePath2, format);
+        assertThat(result).isEqualToIgnoringWhitespace(expectedJson);
+    }
 
-        // Read the expected JSON file
-        String expectedJson = new String(Files.readAllBytes(
-                Path.of(DifferTest.class.getClassLoader().getResource(expectedJsonPath).toURI())));
+    @Test
+    void testPlainFormatOutput() throws Exception {
+        String filePath1 = "src/test/resources/file1.json";
+        String filePath2 = "src/test/resources/file2.json";
+        String format = "plain";
 
-        // Parse and compare the JSON content
-        ObjectMapper mapper = new ObjectMapper();
-        var resultJsonNode = mapper.readTree(result);
-        var expectedJsonNode = mapper.readTree(expectedJson);
+        String expectedPlain = """
+            Property 'chars2' was updated. From [complex value] to false
+            Property 'checked' was updated. From false to true
+            Property 'default' was updated. From null to [complex value]
+            Property 'id' was updated. From 45 to null
+            Property 'key1' was removed
+            Property 'key2' was added with value: 'value2'
+            Property 'numbers2' was updated. From [complex value] to [complex value]
+            Property 'numbers3' was removed
+            Property 'numbers4' was added with value: [complex value]
+            Property 'obj1' was added with value: [complex value]
+            Property 'setting1' was updated. From 'Some value' to 'Another value'
+            Property 'setting2' was updated. From 200 to 300
+            Property 'setting3' was updated. From true to 'none'
+        """;
 
-        System.out.println("Generated Result: " + resultJsonNode.toPrettyString());
-        System.out.println("Expected Result: " + expectedJsonNode.toPrettyString());
+        String result = Differ.generate(filePath1, filePath2, format);
+        assertThat(result).isEqualTo(expectedPlain);
+    }
 
-        assertThat(resultJsonNode).isEqualTo(expectedJsonNode);
+    @Test
+    void testStylishFormatOutput() throws Exception {
+        String filePath1 = "src/test/resources/file1.json";
+        String filePath2 = "src/test/resources/file2.json";
+        String format = "stylish";
+
+        String expectedStylish = """
+            {
+              chars1: [a, b, c]
+            - chars2: [d,e,f]
+            + chars2: false
+            - checked: false
+            + checked: true
+            - default: null
+            + default: [value1,value2]
+            - id: 45
+            + id: null
+            - key1: 'value1'
+            + key2: 'value2'
+              numbers1: [1, 2, 3, 4]
+            - numbers2: [2,3,4,5]
+            + numbers2: [22,33,44,55]
+            - numbers3: [3,4,5]
+            + numbers4: [4,5,6]
+            + obj1: {nestedKey: value,isNested: true}
+            - setting1: 'Some value'
+            + setting1: 'Another value'
+            - setting2: 200
+            + setting2: 300
+            - setting3: true
+            + setting3: 'none'
+            }
+        """;
+
+        String result = Differ.generate(filePath1, filePath2, format);
+        assertThat(result).isEqualTo(expectedStylish);
     }
 }
