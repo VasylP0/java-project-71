@@ -13,12 +13,16 @@ public class Differ {
 
         var diff = DiffBuilder.build(data1, data2);
 
-        System.out.println("Generated Diff: " + diff);
-
         return Formatter.format(diff, format);
     }
 
     public static String generate(String filePath1, String filePath2, String format) throws Exception {
         return generate(Path.of(filePath1), Path.of(filePath2), format);
+    }
+
+    // Overloaded method to handle two string arguments and use default formatter
+    public static String generate(String filePath1, String filePath2) throws Exception {
+        String defaultFormat = "stylish";  // Use a default format, e.g., "stylish"
+        return generate(filePath1, filePath2, defaultFormat);
     }
 }

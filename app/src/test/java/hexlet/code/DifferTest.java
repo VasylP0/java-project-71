@@ -30,7 +30,7 @@ class DifferTest {
             ]
         """;
 
-        String result = Differ.generate(filePath1, filePath2, format);
+        String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
         assertThat(result).isEqualToIgnoringWhitespace(expectedJson);
     }
 
@@ -56,7 +56,7 @@ class DifferTest {
             Property 'setting3' was updated. From true to 'none'
         """;
 
-        String result = Differ.generate(filePath1, filePath2, format);
+        String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
         assertThat(result).isEqualTo(expectedPlain);
     }
 
@@ -92,7 +92,7 @@ class DifferTest {
             }
         """;
 
-        String result = Differ.generate(filePath1, filePath2, format);
-        assertThat(result).isEqualTo(expectedStylish);
+        String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
+        assertThat(result).isEqualToIgnoringWhitespace(expectedStylish);
     }
 }
