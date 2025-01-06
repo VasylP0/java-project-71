@@ -5,7 +5,7 @@ import hexlet.code.formatters.Formatter;
 
 public class Differ {
 
-    public static String generate(String filePath1, String filePath2, String formatName) throws Exception {
+    public static String generate(String filePath1, String filePath2, String format) throws Exception {
         var data1 = Parser.parse(filePath1);
         var data2 = Parser.parse(filePath2);
 
@@ -13,6 +13,6 @@ public class Differ {
 
         System.out.println("Generated Diff: " + diff);
 
-        return Formatter.format(diff, formatName);
+        return Formatter.format(diff, format);
     }
 }
