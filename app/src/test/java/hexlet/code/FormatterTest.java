@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.formatters.Formatter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,32 +17,29 @@ class FormatterTest {
                 new DiffNode("key3", "oldValue3", null, "removed")
         );
 
-        String expectedJson = """
-        [
-          {
-            "key" : "key1",
-            "oldValue" : "oldValue1",
-            "newValue" : "newValue1",
-            "status" : "updated"
-          },
-          {
-            "key" : "key2",
-            "oldValue" : null,
-            "newValue" : "newValue2",
-            "status" : "added"
-          },
-          {
-            "key" : "key3",
-            "oldValue" : "oldValue3",
-            "newValue" : null,
-            "status" : "removed"
-          }
-        ]""";
-
         String result = Formatter.format(diffNodes, "json");
 
-        // Debugging: Log the JSON output
-        System.out.println("Generated JSON:\n" + result);
+        String expectedJson = """
+            [
+              {
+                "key": "key1",
+                "oldValue": "oldValue1",
+                "newValue": "newValue1",
+                "status": "updated"
+              },
+              {
+                "key": "key2",
+                "oldValue": null,
+                "newValue": "newValue2",
+                "status": "added"
+              },
+              {
+                "key": "key3",
+                "oldValue": "oldValue3",
+                "newValue": null,
+                "status": "removed"
+              }
+            ]""";
 
         assertThat(result).isEqualToIgnoringWhitespace(expectedJson);
     }

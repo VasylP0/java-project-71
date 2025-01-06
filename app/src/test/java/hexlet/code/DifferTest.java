@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
@@ -11,103 +12,35 @@ class DifferTest {
 
     @Test
     void testJsonFormat() throws Exception {
+        // Define file paths
         String filePath1 = "src/test/resources/file1.json";
         String filePath2 = "src/test/resources/file2.json";
+        String expectedJsonPath = "expectedJsonResult.json";
 
-        // Debugging: Log file paths
-        System.out.println("File Path 1 Exists: " + Files.exists(Path.of(filePath1)));
-        System.out.println("File Path 2 Exists: " + Files.exists(Path.of(filePath2)));
+        // Ensure files exist
+        assert Files.exists(Path.of(filePath1)) : "File 1 does not exist!";
+        assert Files.exists(Path.of(filePath2)) : "File 2 does not exist!";
+        assert Files.exists(Path.of(DifferTest.class.getClassLoader().getResource(expectedJsonPath).toURI())) : "Expected JSON result file does not exist!";
 
+        // Read the content of file1.json and file2.json
+        String file1Content = new String(Files.readAllBytes(Path.of(filePath1)));
+        String file2Content = new String(Files.readAllBytes(Path.of(filePath2)));
+
+        // Generate the result
         String result = Differ.generate(filePath1, filePath2, "json");
 
-        // Debugging: Log the actual JSON result
-        System.out.println("Generated JSON:\n" + result);
+        // Read the expected JSON file
+        String expectedJson = new String(Files.readAllBytes(
+                Path.of(DifferTest.class.getClassLoader().getResource(expectedJsonPath).toURI())));
 
-        String expectedJson = """
-        [
-          {
-            "key" : "chars2",
-            "oldValue" : [ "d", "e", "f" ],
-            "newValue" : false,
-            "status" : "updated"
-          },
-          {
-            "key" : "checked",
-            "oldValue" : false,
-            "newValue" : true,
-            "status" : "updated"
-          },
-          {
-            "key" : "default",
-            "oldValue" : null,
-            "newValue" : [ "value1", "value2" ],
-            "status" : "updated"
-          },
-          {
-            "key" : "id",
-            "oldValue" : 45,
-            "newValue" : null,
-            "status" : "updated"
-          },
-          {
-            "key" : "key1",
-            "oldValue" : "value1",
-            "newValue" : null,
-            "status" : "removed"
-          },
-          {
-            "key" : "key2",
-            "oldValue" : null,
-            "newValue" : "value2",
-            "status" : "added"
-          },
-          {
-            "key" : "numbers2",
-            "oldValue" : [ 2, 3, 4, 5 ],
-            "newValue" : [ 22, 33, 44, 55 ],
-            "status" : "updated"
-          },
-          {
-            "key" : "numbers3",
-            "oldValue" : [ 3, 4, 5 ],
-            "newValue" : null,
-            "status" : "removed"
-          },
-          {
-            "key" : "numbers4",
-            "oldValue" : null,
-            "newValue" : [ 4, 5, 6 ],
-            "status" : "added"
-          },
-          {
-            "key" : "obj1",
-            "oldValue" : null,
-            "newValue" : {
-              "nestedKey" : "value",
-              "isNested" : true
-            },
-            "status" : "added"
-          },
-          {
-            "key" : "setting1",
-            "oldValue" : "Some value",
-            "newValue" : "Another value",
-            "status" : "updated"
-          },
-          {
-            "key" : "setting2",
-            "oldValue" : 200,
-            "newValue" : 300,
-            "status" : "updated"
-          },
-          {
-            "key" : "setting3",
-            "oldValue" : true,
-            "newValue" : "none",
-            "status" : "updated"
-          }
-        ]""";
+        // Parse and compare the JSON content
+        ObjectMapper mapper = new ObjectMapper();
+        var resultJsonNode = mapper.readTree(result);
+        var expectedJsonNode = mapper.readTree(expectedJson);
 
-        assertThat(result).isEqualToIgnoringWhitespace(expectedJson);
+        System.out.println("Generated Result: " + resultJsonNode.toPrettyString());
+        System.out.println("Expected Result: " + expectedJsonNode.toPrettyString());
+
+        assertThat(resultJsonNode).isEqualTo(expectedJsonNode);
     }
 }

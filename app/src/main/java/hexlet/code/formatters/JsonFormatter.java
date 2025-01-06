@@ -11,9 +11,9 @@ public class JsonFormatter {
     public static String format(List<DiffNode> diffNodes) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(diffNodes);
+            return mapper.writeValueAsString(diffNodes);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing to JSON", e);
+            throw new RuntimeException("Error generating JSON output", e);
         }
     }
 }
