@@ -15,6 +15,7 @@ class DifferTest {
         // Define file paths
         String filePath1 = "src/test/resources/file1.json";
         String filePath2 = "src/test/resources/file2.json";
+        String format = "json";
         String expectedJsonPath = "expectedJsonResult.json";
 
         // Ensure files exist
@@ -27,7 +28,7 @@ class DifferTest {
         String file2Content = new String(Files.readAllBytes(Path.of(filePath2)));
 
         // Generate the result
-        String result = Differ.generate(filePath1, filePath2, "json");
+        String result = Differ.generate(filePath1, filePath2, format);
 
         // Read the expected JSON file
         String expectedJson = new String(Files.readAllBytes(
