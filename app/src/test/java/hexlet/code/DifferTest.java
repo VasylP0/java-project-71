@@ -68,6 +68,7 @@ class DifferTest {
 
         String expectedStylish = """
             {
+              chars1: [a,b,c]
             - chars2: [d,e,f]
             + chars2: false
             - checked: false
@@ -78,6 +79,7 @@ class DifferTest {
             + id: null
             - key1: 'value1'
             + key2: 'value2'
+              numbers1: [1,2,3,4]
             - numbers2: [2,3,4,5]
             + numbers2: [22,33,44,55]
             - numbers3: [3,4,5]
@@ -93,6 +95,6 @@ class DifferTest {
         """;
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
-        assertThat(result).isEqualToIgnoringWhitespace(expectedStylish);
+        assertThat(result).isEqualTo(expectedStylish);
     }
 }
