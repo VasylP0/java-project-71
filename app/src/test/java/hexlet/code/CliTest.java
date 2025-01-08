@@ -2,7 +2,6 @@ package hexlet.code;
 
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CliTest {
@@ -10,17 +9,17 @@ class CliTest {
     @Test
     void testHelpOption() {
         CommandLine cmd = new CommandLine(new App());
-        CommandLine.ParseResult parseResult = cmd.parseArgs("-h");
+        int exitCode = cmd.execute("-h");
 
-        assertEquals(true, parseResult.hasMatchedOption("-h"));
+        assertEquals(CommandLine.ExitCode.OK, exitCode);
     }
 
     @Test
     void testVersionOption() {
         CommandLine cmd = new CommandLine(new App());
-        CommandLine.ParseResult parseResult = cmd.parseArgs("-V");
+        int exitCode = cmd.execute("-V");
 
-        assertEquals(true, parseResult.hasMatchedOption("-V"));
+        assertEquals(CommandLine.ExitCode.OK, exitCode);
     }
 
     @Test

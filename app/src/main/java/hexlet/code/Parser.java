@@ -2,7 +2,8 @@ package hexlet.code;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
@@ -16,6 +17,6 @@ public class Parser {
             objectMapper = new ObjectMapper(new YAMLFactory()); // YAML parser
         }
 
-        return objectMapper.readValue(content, Map.class);
+        return objectMapper.readValue(content, new TypeReference<HashMap<String, Object>>() {});
     }
 }

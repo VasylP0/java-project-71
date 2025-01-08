@@ -45,22 +45,30 @@ public class StylishFormatter {
             }
         }
         result.append("}");
-        return result.toString();
+        String formattedOutput = result.toString();
+
+        // Debugging log: Print the formatted output
+        System.out.println("[DEBUG] Generated Stylish Output:");
+        System.out.println(formattedOutput);
+
+        return formattedOutput;
     }
+
 
     private static String formatValue(Object value) {
         if (value == null) {
             return "null";
         }
-        if (value instanceof List) {
-            return value.toString().replace(", ", ",");
-        }
         if (value instanceof Map) {
             return value.toString().replace(", ", ",").replace("=", ": ");
         }
+        if (value instanceof List) {
+            return value.toString().replace(", ", ",");
+        }
         if (value instanceof String) {
-            return "'" + value + "'";
+            return "'" + value + "'"; // Use consistent quotes
         }
         return value.toString();
     }
+
 }

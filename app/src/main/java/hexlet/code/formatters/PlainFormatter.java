@@ -50,15 +50,16 @@ public class PlainFormatter {
 
     // This is the formatValue method you're asking about
     private static String formatValue(Object value) {
+        if (value == null) {
+            return "null";
+        }
         if (value instanceof Map || value instanceof List) {
             return "[complex value]";
         }
         if (value instanceof String) {
-            return "'" + value + "'";
+            return "'" + value + "'"; // Ensure single quotes for strings
         }
-        if (value == null) {
-            return "null";
-        }
-        return String.valueOf(value);
+        return value.toString();
     }
+
 }
