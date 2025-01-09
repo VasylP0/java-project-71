@@ -38,3 +38,8 @@ bin/
 # Local-only files
 config/
 ion/
+
+# Exclude files generated during Gradle dependency resolution
+.gradle/
+.gradle/**/*
+.gradle/*/
