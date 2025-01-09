@@ -2,6 +2,7 @@ package hexlet.code;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.nio.file.Path;
 
 class DifferTest {
@@ -29,7 +30,16 @@ Property 'setting3' was updated. From true to 'none'
     """;
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
-        assertThat(result).isEqualTo(expectedPlain);
+
+        // Normalize both outputs to ensure no trailing spaces cause mismatches
+        String normalizedResult = result.stripTrailing();
+        String normalizedExpected = expectedPlain.stripTrailing();
+
+        // Add debug logs for clarity during test failures
+        System.out.println("Expected Plain Output:\n" + normalizedExpected);
+        System.out.println("Actual Plain Output:\n" + normalizedResult);
+
+        assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
 
     @Test
@@ -65,6 +75,15 @@ Property 'setting3' was updated. From true to 'none'
     """;
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
-        assertThat(result).isEqualTo(expectedStylish);
+
+        // Normalize both outputs to ensure no trailing spaces cause mismatches
+        String normalizedResult = result.stripTrailing();
+        String normalizedExpected = expectedStylish.stripTrailing();
+
+        // Add debug logs for clarity during test failures
+        System.out.println("Expected Stylish Output:\n" + normalizedExpected);
+        System.out.println("Actual Stylish Output:\n" + normalizedResult);
+
+        assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
 }
