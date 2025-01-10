@@ -35,9 +35,9 @@ Property 'setting3' was updated. From true to 'none'
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedPlain);
 
-        // Debug logs
-        System.out.println("Normalized Expected Plain Output:\n" + normalizedExpected);
-        System.out.println("Normalized Actual Plain Output:\n" + normalizedResult);
+        // Debug logs for clarity
+        System.out.println("Expected Plain Output (Normalized):\n" + normalizedExpected);
+        System.out.println("Actual Plain Output (Normalized):\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
@@ -50,21 +50,21 @@ Property 'setting3' was updated. From true to 'none'
 
         String expectedStylish = """
 {
-  - chars2: [d,e,f]
+  - chars2: [d, e, f]
   + chars2: false
   - checked: false
   + checked: true
   - default: null
-  + default: [value1,value2]
+  + default: [value1, value2]
   - id: 45
   + id: null
   - key1: 'value1'
   + key2: 'value2'
-  - numbers2: [2,3,4,5]
-  + numbers2: [22,33,44,55]
-  - numbers3: [3,4,5]
-  + numbers4: [4,5,6]
-  + obj1: {nestedKey: value,isNested: true}
+  - numbers2: [2, 3, 4, 5]
+  + numbers2: [22, 33, 44, 55]
+  - numbers3: [3, 4, 5]
+  + numbers4: [4, 5, 6]
+  + obj1: {nestedKey: value, isNested: true}
   - setting1: 'Some value'
   + setting1: 'Another value'
   - setting2: 200
@@ -80,14 +80,18 @@ Property 'setting3' was updated. From true to 'none'
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedStylish);
 
-        // Debug logs
-        System.out.println("Normalized Expected Stylish Output:\n" + normalizedExpected);
-        System.out.println("Normalized Actual Stylish Output:\n" + normalizedResult);
+        // Debug logs for clarity
+        System.out.println("Expected Stylish Output (Normalized):\n" + normalizedExpected);
+        System.out.println("Actual Stylish Output (Normalized):\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
 
     private String normalizeOutput(String output) {
-        return output.stripTrailing().replaceAll("\\s+", " ").trim();
+        return output
+                .replaceAll("\\s*,\\s*", ", ")  // Normalize spaces around commas
+                .replaceAll("\\s*:\\s*", ": ")  // Normalize spaces around colons
+                .stripTrailing()                // Remove trailing spaces
+                .trim();                        // Trim leading and trailing whitespace
     }
 }
