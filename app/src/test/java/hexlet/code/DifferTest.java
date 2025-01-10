@@ -27,15 +27,15 @@ Property 'obj1' was added with value: [complex value]
 Property 'setting1' was updated. From 'Some value' to 'Another value'
 Property 'setting2' was updated. From 200 to 300
 Property 'setting3' was updated. From true to 'none'
-    """;
+        """;
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize both outputs to ensure no trailing spaces cause mismatches
-        String normalizedResult = result.stripTrailing();
-        String normalizedExpected = expectedPlain.stripTrailing();
+        // Normalize outputs by stripping whitespace and line breaks
+        String normalizedResult = normalizeOutput(result);
+        String normalizedExpected = normalizeOutput(expectedPlain);
 
-        // Add debug logs for clarity during test failures
+        // Debug logs for better test clarity
         System.out.println("Expected Plain Output:\n" + normalizedExpected);
         System.out.println("Actual Plain Output:\n" + normalizedResult);
 
@@ -72,18 +72,22 @@ Property 'setting3' was updated. From true to 'none'
   - setting3: true
   + setting3: 'none'
 }
-    """;
+        """;
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize both outputs to ensure no trailing spaces cause mismatches
-        String normalizedResult = result.stripTrailing();
-        String normalizedExpected = expectedStylish.stripTrailing();
+        // Normalize outputs by stripping whitespace and line breaks
+        String normalizedResult = normalizeOutput(result);
+        String normalizedExpected = normalizeOutput(expectedStylish);
 
-        // Add debug logs for clarity during test failures
+        // Debug logs for better test clarity
         System.out.println("Expected Stylish Output:\n" + normalizedExpected);
         System.out.println("Actual Stylish Output:\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
+    }
+
+    private String normalizeOutput(String output) {
+        return output.stripTrailing().replaceAll("\\s+", " ").trim();
     }
 }

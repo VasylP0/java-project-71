@@ -33,7 +33,7 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnitPlatform() // Configure JUnit Platform for testing
     jvmArgs("--enable-preview") // Enable preview features for tests
 }
 
