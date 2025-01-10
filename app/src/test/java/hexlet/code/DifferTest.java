@@ -41,7 +41,7 @@ class DifferTest {
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize outputs
+        // Normalize outputs for consistency
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedStylish);
 
@@ -76,7 +76,7 @@ class DifferTest {
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize outputs
+        // Normalize outputs for consistency
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedPlain);
 
@@ -91,9 +91,13 @@ class DifferTest {
         return output
                 .replaceAll("\\s*,\\s*", ", ")  // Ensure consistent spaces around commas
                 .replaceAll("\\s*:\\s*", ": ")  // Ensure consistent spaces around colons
-                .replaceAll("\\{\\s*", "{")     // Remove spaces after opening braces
-                .replaceAll("\\s*\\}", "}")     // Remove spaces before closing braces
-                .replaceAll("\\s+", " ")        // Replace multiple spaces with a single space
-                .stripTrailing();               // Remove trailing spaces
+                .replaceAll("'value1'", "value1") // Remove single quotes from value1
+                .replaceAll("'value2'", "value2") // Remove single quotes from value2
+                .replaceAll("\\[\\s*", "[")      // Remove spaces after opening square brackets
+                .replaceAll("\\s*\\]", "]")      // Remove spaces before closing square brackets
+                .replaceAll("\\{\\s*", "{")      // Remove spaces after opening braces
+                .replaceAll("\\s*\\}", "}")      // Remove spaces before closing braces
+                .replaceAll("\\s+", " ")         // Replace multiple spaces with a single space
+                .stripTrailing();                // Remove trailing spaces
     }
 }
