@@ -31,13 +31,13 @@ Property 'setting3' was updated. From true to 'none'
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize outputs by stripping whitespace and line breaks
+        // Normalize outputs
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedPlain);
 
-        // Debug logs for better test clarity
-        System.out.println("Expected Plain Output:\n" + normalizedExpected);
-        System.out.println("Actual Plain Output:\n" + normalizedResult);
+        // Debug logs
+        System.out.println("Normalized Expected Plain Output:\n" + normalizedExpected);
+        System.out.println("Normalized Actual Plain Output:\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
@@ -76,13 +76,13 @@ Property 'setting3' was updated. From true to 'none'
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize outputs by stripping whitespace and line breaks
+        // Normalize outputs
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedStylish);
 
-        // Debug logs for better test clarity
-        System.out.println("Expected Stylish Output:\n" + normalizedExpected);
-        System.out.println("Actual Stylish Output:\n" + normalizedResult);
+        // Debug logs
+        System.out.println("Normalized Expected Stylish Output:\n" + normalizedExpected);
+        System.out.println("Normalized Actual Stylish Output:\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
