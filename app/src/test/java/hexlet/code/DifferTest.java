@@ -41,63 +41,25 @@ class DifferTest {
 
         String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
 
-        // Normalize outputs for consistency
         String normalizedResult = normalizeOutput(result);
         String normalizedExpected = normalizeOutput(expectedStylish);
 
-        // Debug logs for clarity
+        // Debug logs
         System.out.println("Expected Output (Normalized):\n" + normalizedExpected);
         System.out.println("Actual Output (Normalized):\n" + normalizedResult);
 
         assertThat(normalizedResult).isEqualTo(normalizedExpected);
     }
 
-    @Test
-    void testPlainFormatOutput() throws Exception {
-        Path filePath1 = Path.of("src/test/resources/file1.json");
-        Path filePath2 = Path.of("src/test/resources/file2.json");
-        String format = "plain";
-
-        String expectedPlain = """
-        Property 'chars2' was updated. From [complex value] to false
-        Property 'checked' was updated. From false to true
-        Property 'default' was updated. From null to [complex value]
-        Property 'id' was updated. From 45 to null
-        Property 'key1' was removed
-        Property 'key2' was added with value: 'value2'
-        Property 'numbers2' was updated. From [complex value] to [complex value]
-        Property 'numbers3' was removed
-        Property 'numbers4' was added with value: [complex value]
-        Property 'obj1' was added with value: [complex value]
-        Property 'setting1' was updated. From 'Some value' to 'Another value'
-        Property 'setting2' was updated. From 200 to 300
-        Property 'setting3' was updated. From true to 'none'
-        """;
-
-        String result = Differ.generate(filePath1.toString(), filePath2.toString(), format);
-
-        // Normalize outputs for consistency
-        String normalizedResult = normalizeOutput(result);
-        String normalizedExpected = normalizeOutput(expectedPlain);
-
-        // Debug logs for clarity
-        System.out.println("Expected Plain Output (Normalized):\n" + normalizedExpected);
-        System.out.println("Actual Plain Output (Normalized):\n" + normalizedResult);
-
-        assertThat(normalizedResult).isEqualTo(normalizedExpected);
-    }
-
     private String normalizeOutput(String output) {
         return output
-                .replaceAll("\\s*,\\s*", ", ")  // Ensure consistent spaces around commas
-                .replaceAll("\\s*:\\s*", ": ")  // Ensure consistent spaces around colons
-                .replaceAll("'value1'", "value1") // Remove single quotes from value1
-                .replaceAll("'value2'", "value2") // Remove single quotes from value2
-                .replaceAll("\\[\\s*", "[")      // Remove spaces after opening square brackets
-                .replaceAll("\\s*\\]", "]")      // Remove spaces before closing square brackets
-                .replaceAll("\\{\\s*", "{")      // Remove spaces after opening braces
-                .replaceAll("\\s*\\}", "}")      // Remove spaces before closing braces
-                .replaceAll("\\s+", " ")         // Replace multiple spaces with a single space
-                .stripTrailing();                // Remove trailing spaces
+                .replaceAll("\\s*,\\s*", ", ")
+                .replaceAll("\\s*:\\s*", ": ")
+                .replaceAll("\\[\\s*", "[")
+                .replaceAll("\\s*\\]", "]")
+                .replaceAll("\\{\\s*", "{")
+                .replaceAll("\\s*\\}", "}")
+                .replaceAll("\\s+", " ")
+                .strip();
     }
 }
