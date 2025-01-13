@@ -1,6 +1,6 @@
 plugins {
     application
-    id("java")
+    java
     id("checkstyle")
     id("jacoco")
 }
@@ -33,18 +33,18 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform() // Configure JUnit Platform for testing
-    jvmArgs("--enable-preview") // Enable preview features for tests
+    useJUnitPlatform() // Use JUnit Platform for tests
+    jvmArgs("--enable-preview") // Enable Java preview features
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21)) // Set Java version to 21
+        languageVersion.set(JavaLanguageVersion.of(21)) // Use Java 21
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.compilerArgs.add("--enable-preview") // Enable preview features during compilation
+    options.compilerArgs.add("--enable-preview") // Enable Java preview features during compilation
 }
 
 checkstyle {
@@ -52,20 +52,12 @@ checkstyle {
     configFile = file("config/checkstyle/checkstyle.xml") // Checkstyle config
 }
 
-tasks.checkstyleMain {
-    source = fileTree("src/main/java") // Checkstyle for main sources
-}
-
-tasks.checkstyleTest {
-    source = fileTree("src/test/java") // Checkstyle for test sources
-}
-
 jacoco {
-    toolVersion = "0.8.10" // Jacoco version for code coverage
+    toolVersion = "0.8.10" // JaCoCo version for code coverage
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test) // Ensure Jacoco runs after tests
+    dependsOn(tasks.test) // Ensure JaCoCo runs after tests
     reports {
         xml.required.set(true) // Generate XML report
         html.required.set(true) // Generate HTML report

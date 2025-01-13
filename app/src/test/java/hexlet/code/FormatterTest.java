@@ -1,5 +1,7 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.formatters.Formatter;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FormatterTest {
 
     @Test
-    void testFormatterWithJson() {
+    void testFormatterWithJson() throws Exception {
         List<DiffNode> diffNodes = List.of(
                 new DiffNode("key1", "oldValue1", "newValue1", "updated"),
                 new DiffNode("key2", null, "newValue2", "added"),
@@ -18,6 +20,9 @@ class FormatterTest {
         );
 
         String result = Formatter.format(diffNodes, "json");
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualNode = mapper.readTree(result);
 
         String expectedJson = """
             [
@@ -39,8 +44,11 @@ class FormatterTest {
                 "newValue": null,
                 "status": "removed"
               }
-            ]""";
+            ]
+        """;
 
-        assertThat(result).isEqualToIgnoringWhitespace(expectedJson);
+        JsonNode expectedNode = mapper.readTree(expectedJson);
+
+        assertThat(actualNode).isEqualTo(expectedNode);
     }
 }

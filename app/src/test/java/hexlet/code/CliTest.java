@@ -18,20 +18,18 @@ class CliTest {
     void cliGenerateTest(String file1, String file2, String format) {
         String[] args = {file1, file2, "-f", format};
 
-        // Capture the system output
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
 
         try {
-            // Simulate CLI execution
             App.main(args);
         } finally {
-            System.setOut(originalOut); // Restore the original System.out
+            System.setOut(originalOut);
         }
 
-        String actualOutput = outputStream.toString().trim();
-        String expectedOutput = """
+        String actualOutput = normalizeOutput(outputStream.toString().trim());
+        String expectedOutput = normalizeOutput("""
         {
           chars1: [a, b, c]
         - chars2: [d, e, f]
@@ -57,9 +55,9 @@ class CliTest {
         - setting3: true
         + setting3: 'none'
         }
-        """;
+        """);
 
-        assertThat(normalizeOutput(actualOutput)).isEqualTo(normalizeOutput(expectedOutput));
+        assertThat(actualOutput).isEqualTo(expectedOutput);
     }
 
     private String normalizeOutput(String output) {
@@ -71,6 +69,6 @@ class CliTest {
                 .replaceAll("\\{\\s*", "{")
                 .replaceAll("\\s*\\}", "}")
                 .replaceAll("\\s+", " ")
-                .strip();
+                .trim();
     }
 }
