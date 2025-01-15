@@ -1,8 +1,7 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.formatters.Formatter;
+import hexlet.code.formatters.JsonFormatter;
+import hexlet.code.formatters.PlainFormatter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,43 +11,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FormatterTest {
 
     @Test
-    void testFormatterWithJson() throws Exception {
+    void testJsonFormatter() {
+        JsonFormatter jsonFormatter = new JsonFormatter();
         List<DiffNode> diffNodes = List.of(
-                new DiffNode("key1", "oldValue1", "newValue1", "updated"),
-                new DiffNode("key2", null, "newValue2", "added"),
-                new DiffNode("key3", "oldValue3", null, "removed")
+                new DiffNode("key1", "value1", "value2", "updated")
         );
 
-        String result = Formatter.format(diffNodes, "json");
+        String result = jsonFormatter.format(diffNodes, "json");
+        String expected = "[{\"key\":\"key1\",\"status\":\"updated\",\"oldValue\":\"value1\",\"newValue\":\"value2\"}]";
+        assertThat(result).isEqualTo(expected);
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode actualNode = mapper.readTree(result);
+    @Test
+    void testPlainFormatter() {
+        PlainFormatter plainFormatter = new PlainFormatter();
+        List<DiffNode> diffNodes = List.of(
+                new DiffNode("key1", "value1", "value2", "updated")
+        );
 
-        String expectedJson = """
-            [
-              {
-                "key": "key1",
-                "oldValue": "oldValue1",
-                "newValue": "newValue1",
-                "status": "updated"
-              },
-              {
-                "key": "key2",
-                "oldValue": null,
-                "newValue": "newValue2",
-                "status": "added"
-              },
-              {
-                "key": "key3",
-                "oldValue": "oldValue3",
-                "newValue": null,
-                "status": "removed"
-              }
-            ]
-        """;
-
-        JsonNode expectedNode = mapper.readTree(expectedJson);
-
-        assertThat(actualNode).isEqualTo(expectedNode);
+        String result = plainFormatter.format(diffNodes, "plain");
+        String expected = "Property 'key1' was updated. From 'value1' to 'value2'";
+        assertThat(result).isEqualTo(expected);
     }
 }

@@ -2,21 +2,21 @@ package hexlet.code;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.HashMap;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class Parser {
-
-    public static Map<String, Object> parse(String content) throws Exception {
-        ObjectMapper objectMapper;
-
-        if (content.startsWith("{")) {
-            objectMapper = new ObjectMapper(); // JSON parser
+    public static Map<String, Object> parse(String filePath) throws IOException {
+        String content = Files.readString(Path.of(filePath));
+        if (filePath.endsWith(".json")) {
+            return new ObjectMapper().readValue(content, Map.class);
+        } else if (filePath.endsWith(".yml") || filePath.endsWith(".yaml")) {
+            return new ObjectMapper(new YAMLFactory()).readValue(content, Map.class);
         } else {
-            objectMapper = new ObjectMapper(new YAMLFactory()); // YAML parser
+            throw new IllegalArgumentException("Unsupported file format: " + filePath);
         }
-
-        return objectMapper.readValue(content, new TypeReference<HashMap<String, Object>>() {});
     }
 }

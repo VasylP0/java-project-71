@@ -3,7 +3,6 @@ package hexlet.code;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-
 import java.util.concurrent.Callable;
 
 @Command(
@@ -27,7 +26,6 @@ public class App implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
-            // Generate and print the diff
             String diff = Differ.generate(filepath1, filepath2, format);
             System.out.println(diff);
             return 0; // Exit code 0 indicates success

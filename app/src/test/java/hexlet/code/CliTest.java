@@ -13,11 +13,12 @@ class CliTest {
     @ParameterizedTest
     @CsvSource({
             "'src/test/resources/file1.json', 'src/test/resources/file2.json', stylish",
-            "'src/test/resources/file1.yml', 'src/test/resources/file2.yml', stylish"
+            "'src/test/resources/file1.yaml', 'src/test/resources/file2.yaml', stylish"
     })
     void cliGenerateTest(String file1, String file2, String format) {
         String[] args = {file1, file2, "-f", format};
 
+        // Redirect System.out to capture CLI output
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
@@ -25,6 +26,7 @@ class CliTest {
         try {
             App.main(args);
         } finally {
+            // Restore original System.out
             System.setOut(originalOut);
         }
 

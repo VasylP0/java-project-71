@@ -1,28 +1,21 @@
 package hexlet.code;
-
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.util.List;
+import hexlet.code.formatters.DiffGenerator;
 import hexlet.code.formatters.Formatter;
+import hexlet.code.formatters.FormatterFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class Differ {
 
-    public static String generate(Path filePath1, Path filePath2, String format) throws Exception {
-        var data1 = Parser.parse(Files.readString(filePath1));
-        var data2 = Parser.parse(Files.readString(filePath2));
+    public static String generate(String filePath1, String filePath2, String format) throws IOException {
+        Map<String, Object> data1 = Parser.parse(filePath1);
+        Map<String, Object> data2 = Parser.parse(filePath2);
 
-        var diff = DiffBuilder.build(data1, data2);
+        List<DiffNode> diff = DiffGenerator.generate(data1, data2);
+        Formatter formatter = FormatterFactory.getFormatter(format);
 
-        return Formatter.format(diff, format);
-    }
-
-    public static String generate(String filePath1, String filePath2, String format) throws Exception {
-        return generate(Path.of(filePath1), Path.of(filePath2), format);
-    }
-
-    // Overloaded method to handle two string arguments and use default formatter
-    public static String generate(String filePath1, String filePath2) throws Exception {
-        String defaultFormat = "stylish";  // Use a default format, e.g., "stylish"
-        return generate(filePath1, filePath2, defaultFormat);
+        return formatter.format(diff, format);
     }
 }

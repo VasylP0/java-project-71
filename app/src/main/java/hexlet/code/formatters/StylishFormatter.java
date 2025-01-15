@@ -1,74 +1,34 @@
 package hexlet.code.formatters;
 
-import java.util.List;
-import java.util.Map;
 import hexlet.code.DiffNode;
+import java.util.List;
 
-public class StylishFormatter {
-    public static String format(List<DiffNode> diffNodes) {
+public class StylishFormatter implements Formatter {
+
+    @Override
+    public String format(List<DiffNode> diffNodes, String format) {
         StringBuilder result = new StringBuilder("{\n");
+
         for (DiffNode node : diffNodes) {
-            switch (node.getStatus()) {
-                case "added":
-                    result.append("  + ")
-                            .append(node.getKey())
-                            .append(": ")
-                            .append(formatValue(node.getNewValue()))
-                            .append("\n");
-                    break;
-                case "removed":
-                    result.append("  - ")
-                            .append(node.getKey())
-                            .append(": ")
-                            .append(formatValue(node.getOldValue()))
-                            .append("\n");
-                    break;
-                case "updated":
-                    result.append("  - ")
-                            .append(node.getKey())
-                            .append(": ")
-                            .append(formatValue(node.getOldValue()))
-                            .append("\n");
-                    result.append("  + ")
-                            .append(node.getKey())
-                            .append(": ")
-                            .append(formatValue(node.getNewValue()))
-                            .append("\n");
-                    break;
-                case "unchanged":
-                    result.append("    ")
-                            .append(node.getKey())
-                            .append(": ")
-                            .append(formatValue(node.getOldValue()))
-                            .append("\n");
-                    break;
+            String key = node.getKey();
+            String status = node.getStatus();
+            Object oldValue = node.getOldValue();
+            Object newValue = node.getNewValue();
+
+            switch (status) {
+                case "added" -> result.append("  + ").append(key).append(": ").append(newValue).append("\n");
+                case "removed" -> result.append("  - ").append(key).append(": ").append(oldValue).append("\n");
+                case "updated" -> {
+                    result.append("  - ").append(key).append(": ").append(oldValue).append("\n");
+                    result.append("  + ").append(key).append(": ").append(newValue).append("\n");
+                }
+                case "unchanged" -> result.append("    ").append(key).append(": ").append(oldValue).append("\n");
+                default -> {
+                }
             }
         }
+
         result.append("}");
-        String formattedOutput = result.toString();
-
-        // Debugging log: Print the formatted output
-        System.out.println("[DEBUG] Generated Stylish Output:");
-        System.out.println(formattedOutput);
-
-        return formattedOutput;
+        return result.toString();
     }
-
-
-    private static String formatValue(Object value) {
-        if (value == null) {
-            return "null";
-        }
-        if (value instanceof Map) {
-            return value.toString().replace(", ", ",").replace("=", ": ");
-        }
-        if (value instanceof List) {
-            return value.toString().replace(", ", ",");
-        }
-        if (value instanceof String) {
-            return "'" + value + "'"; // Use consistent quotes
-        }
-        return value.toString();
-    }
-
 }
