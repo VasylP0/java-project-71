@@ -38,11 +38,12 @@ tasks {
         jvmArgs("--enable-preview") // Enable Java preview features
         testLogging {
             events("passed", "skipped", "failed") // Show detailed test output
+            showStandardStreams = true // Capture and display test output
         }
     }
 
     withType<JavaCompile>().configureEach {
-        options.compilerArgs.add("--enable-preview") // Enable Java preview features during compilation
+        options.compilerArgs.addAll(listOf("--enable-preview", "-Xlint:unchecked")) // Enable preview and detailed warnings
     }
 
     jacocoTestReport {
@@ -53,7 +54,6 @@ tasks {
         }
     }
 
-    // Clean previous reports
     val cleanReports by creating(Delete::class) {
         group = "cleanup"
         description = "Cleans up old test and coverage reports"

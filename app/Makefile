@@ -1,5 +1,15 @@
-.PHONY: run-dist
+# Makefile in app/
 
-run-dist:
-	./build/install/app/bin/app
+.PHONY: build test clean
 
+build:
+	./gradlew clean build
+
+test:
+	./gradlew test
+
+coverage:
+	./gradlew jacocoTestReport
+
+clean:
+	./gradlew clean
