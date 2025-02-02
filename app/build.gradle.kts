@@ -7,6 +7,7 @@ plugins {
 
 application {
     mainClass.set("hexlet.code.App")
+    applicationDefaultJvmArgs = listOf("src/test/resources/file1.json", "src/test/resources/file2.json") // Default run args
 }
 
 group = "hexlet.code"
@@ -17,40 +18,33 @@ repositories {
 }
 
 dependencies {
-    // Libraries for parsing JSON and YAML
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
-
-    // CLI library
     implementation("info.picocli:picocli:4.7.0")
-
-    // Testing libraries
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
     testImplementation("org.assertj:assertj-core:3.24.2")
-
-    // JetBrains annotations for nullability
     implementation("org.jetbrains:annotations:24.0.1")
 }
 
 tasks {
     test {
-        useJUnitPlatform() // Use JUnit Platform for tests
-        jvmArgs("--enable-preview") // Enable Java preview features
+        useJUnitPlatform()
+        jvmArgs("--enable-preview")
         testLogging {
-            events("passed", "skipped", "failed") // Show detailed test output
-            showStandardStreams = true // Capture and display test output
+            events("passed", "skipped", "failed")
+            showStandardStreams = true
         }
     }
 
     withType<JavaCompile>().configureEach {
-        options.compilerArgs.addAll(listOf("--enable-preview", "-Xlint:unchecked")) // Enable preview and detailed warnings
+        options.compilerArgs.addAll(listOf("--enable-preview", "-Xlint:unchecked"))
     }
 
     jacocoTestReport {
-        dependsOn(test) // Ensure JaCoCo runs after tests
+        dependsOn(test)
         reports {
-            xml.required.set(true) // Generate XML report
-            html.required.set(true) // Generate HTML report
+            xml.required.set(true)
+            html.required.set(true)
         }
     }
 
@@ -63,16 +57,15 @@ tasks {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21)) // Use Java 21
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 checkstyle {
-    toolVersion = "10.12.0" // Checkstyle version
-    configFile = file("config/checkstyle/checkstyle.xml") // Checkstyle config
+    toolVersion = "10.12.0"
+    configFile = file("config/checkstyle/checkstyle.xml") // Make sure this file exists!
 }
 
-// Task for running tests with clean logs
 tasks.register("runTests") {
     dependsOn("clean", "test")
     description = "Clean build and run all tests"

@@ -1,6 +1,4 @@
-package hexlet.code.formatters;
-
-import hexlet.code.DiffNode;
+package hexlet.code;
 
 import java.util.HashSet;
 import java.util.Map;

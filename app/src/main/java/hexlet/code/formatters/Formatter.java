@@ -1,8 +1,8 @@
 package hexlet.code.formatters;
 
-import hexlet.code.DiffNode;
 import java.util.List;
+import java.util.Map;
 
 public interface Formatter {
-    String format(List<DiffNode> diffNodes, String format);
+    String format(List<Map<String, Object>> differences);
 }
