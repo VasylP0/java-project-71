@@ -1,13 +1,18 @@
 package hexlet.code.formatters;
 
-public class FormatterFactory {
+import java.util.List;
+import java.util.Map;
 
+public class FormatterFactory {
     public static Formatter getFormatter(String format) {
-        return switch (format) {
-            case "json" -> new JsonFormatter();
-            case "plain" -> new PlainFormatter();
-            case "stylish" -> new StylishFormatter();
-            default -> throw new IllegalArgumentException("Unsupported format: " + format);
-        };
+        switch (format.toLowerCase()) {
+            case "json":
+                return new JsonFormatter();
+            case "plain":
+                return new PlainFormatter();
+            case "stylish":
+            default:
+                return new StylishFormatter();
+        }
     }
 }
