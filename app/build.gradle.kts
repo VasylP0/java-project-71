@@ -21,10 +21,13 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
     implementation("info.picocli:picocli:4.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.assertj:assertj-core:3.24.2")
     implementation("org.jetbrains:annotations:24.0.1")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0") // Required for @ParameterizedTest
+    testImplementation("org.assertj:assertj-core:3.24.2")
 }
+
 
 tasks {
     test {
