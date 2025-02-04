@@ -2,41 +2,42 @@ package hexlet.code.formatters;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PlainFormatter implements Formatter {
 
     @Override
     public String format(List<Map<String, Object>> diff) {
-        return diff.stream()
-                .map(this::formatLine)
-                .filter(line -> !line.isEmpty()) // Remove empty lines
-                .collect(Collectors.joining("\n"));
-    }
+        StringBuilder result = new StringBuilder();
 
-    private String formatLine(Map<String, Object> change) {
-        String key = change.get("key").toString();
-        String type = change.get("type").toString();
+        for (Map<String, Object> entry : diff) {
+            String key = (String) entry.get("key");
+            String type = (String) entry.get("type");
 
-        switch (type) {
-            case "added":
-                return "Property '" + key + "' was added with value: " + formatValue(change.get("value"));
-            case "removed":
-                return "Property '" + key + "' was removed";
-            case "changed":
-                return "Property '" + key + "' was updated. From "
-                        + formatValue(change.get("oldValue"))
-                        + " to "
-                        + formatValue(change.get("newValue"));
-            default:
-                return ""; // Ignore unchanged properties
+            switch (type) {
+                case "added":
+                    result.append(String.format("Property '%s' was added with value: %s%n", key, formatValue(entry.get("value"))));
+                    break;
+                case "removed":
+                    result.append(String.format("Property '%s' was removed%n", key));
+                    break;
+                case "changed":
+                    result.append(String.format("Property '%s' was updated. From %s to %s%n",
+                            key, formatValue(entry.get("oldValue")), formatValue(entry.get("newValue"))));
+                    break;
+                default:
+                    break;
+            }
         }
+        return result.toString().trim();
     }
 
-    private String formatValue(Object value) {
-        if (value instanceof Map || value instanceof List) {
+    private static String formatValue(Object value) {
+        if (value instanceof List || value instanceof Map) {
             return "[complex value]";
         }
-        return value instanceof String ? "'" + value + "'" : value.toString();
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        return String.valueOf(value);
     }
 }
