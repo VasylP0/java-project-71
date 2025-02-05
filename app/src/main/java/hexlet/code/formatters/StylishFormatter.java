@@ -2,27 +2,29 @@ package hexlet.code.formatters;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StylishFormatter implements Formatter {
 
     @Override
     public String format(List<Map<String, Object>> diff) {
-        return diff.stream()
-                .map(this::formatLine)
-                .collect(Collectors.joining("\n", "{\n", "\n}"));
-    }
+        StringBuilder result = new StringBuilder("{\n");
 
-    private String formatLine(Map<String, Object> change) {
-        String key = change.get("key").toString();
-        String type = change.get("type").toString();
-        Object value = change.get("value");
+        for (Map<String, Object> entry : diff) {
+            String key = (String) entry.get("key");
+            String type = (String) entry.get("type");
 
-        return switch (type) {
-            case "added" -> "  + " + key + ": " + value;
-            case "removed" -> "  - " + key + ": " + value;
-            case "changed" -> "  - " + key + ": " + change.get("oldValue") + "\n  + " + key + ": " + change.get("newValue");
-            default -> "  " + key + ": " + value;
-        };
+            switch (type) {
+                case "added" -> result.append(String.format("  + %s: %s%n", key, entry.get("value")));
+                case "removed" -> result.append(String.format("  - %s: %s%n", key, entry.get("value")));
+                case "changed" -> {
+                    result.append(String.format("  - %s: %s%n", key, entry.get("oldValue")));
+                    result.append(String.format("  + %s: %s%n", key, entry.get("newValue")));
+                }
+                default -> result.append(String.format("    %s: %s%n", key, entry.get("value")));
+            }
+        }
+
+        result.append("}");
+        return result.toString();
     }
 }
