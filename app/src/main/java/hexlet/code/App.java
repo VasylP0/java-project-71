@@ -1,9 +1,8 @@
 package hexlet.code;
-import hexlet.code.Differ;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import java.util.concurrent.Callable;
 
 @Command(
         name = "gendiff",
@@ -11,7 +10,7 @@ import java.util.concurrent.Callable;
         version = "gendiff 1.0",
         description = "Compares two configuration files and shows a difference."
 )
-public class App implements Callable<Integer> {
+public class App implements Runnable {
 
     @Parameters(index = "0", description = "Path to the first file")
     private String filepath1;
@@ -24,14 +23,13 @@ public class App implements Callable<Integer> {
     private String format;
 
     @Override
-    public Integer call() {
+    public void run() {
         try {
             String diff = Differ.generate(filepath1, filepath2, format);
             System.out.println(diff);
-            return 0; // Exit code 0 indicates success
         } catch (Exception e) {
+            System.err.println("❌ Error: Failed to generate diff");
             e.printStackTrace();
-            return 1; // Exit code 1 indicates failure
         }
     }
 

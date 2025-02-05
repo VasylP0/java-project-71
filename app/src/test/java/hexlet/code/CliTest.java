@@ -1,35 +1,27 @@
 package hexlet.code;
 
 import org.junit.jupiter.api.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import static org.junit.jupiter.api.Assertions.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CliTest {
-    private final PrintStream originalOut = System.out;
-    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     @Test
-    void cliGenerateTest() {
-        System.out.println("🚀 STARTING cliGenerateTest...");
+    void cliGenerateTest() throws Exception {
+        String file1 = "src/test/resources/fixtures/file1.json";
+        String file2 = "src/test/resources/fixtures/file2.json";
+        String expectedOutput = Files.readString(Path.of("src/test/resources/fixtures/expectedStylish.json")).trim();
 
-        String file1 = "src/test/resources/file1.json";
-        String file2 = "src/test/resources/file2.json";
-        String format = "stylish";
+        // Run Differ and capture output
+        String actualOutput = Differ.generate(file1, file2, "stylish").trim();
 
-        assertTrue(new java.io.File(file1).canRead(), "✅ File is readable: " + file1);
-        assertTrue(new java.io.File(file2).canRead(), "✅ File is readable: " + file2);
+        // Debugging Output
+        System.out.println("📢 Debug: CLI Output:");
+        System.out.println("Expected Output:\n" + expectedOutput);
+        System.out.println("Actual Output:\n" + actualOutput);
 
-        System.out.println("🛠 Before calling App.main(args)...");
-
-        try {
-            App.main(new String[]{file1, file2, "--format", format});
-            System.out.println("✅ App.main() completed successfully.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("❌ App.main() threw an exception: " + e.getMessage());
-        }
-
-        System.out.println("📤 Captured Output: \n" + outputStream.toString());
+        // Assert Correctness
+        assertEquals(expectedOutput, actualOutput);
     }
 }
