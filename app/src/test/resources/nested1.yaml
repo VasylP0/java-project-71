@@ -1,6 +1,0 @@
-setting1: Some value
-setting2: 200
-key1: value1
-obj1:
-  nestedKey: value
-  isNested: true

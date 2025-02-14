@@ -7,7 +7,6 @@ plugins {
 
 application {
     mainClass.set("hexlet.code.App")
-    applicationDefaultJvmArgs = listOf("src/test/resources/file1.json", "src/test/resources/file2.json") // Default run args
 }
 
 group = "hexlet.code"
@@ -27,7 +26,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0") // Required for @ParameterizedTest
     testImplementation("org.assertj:assertj-core:3.24.2")
 }
-
 
 tasks {
     test {
