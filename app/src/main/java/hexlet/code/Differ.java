@@ -1,28 +1,38 @@
 package hexlet.code;
 
-import hexlet.code.formatters.FormatterFactory;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
 public class Differ {
+
     public static String generate(String filepath1, String filepath2) throws Exception {
-        return generate(filepath1, filepath2, "stylish"); // ✅ Default to "stylish"
+        Map<String, Object> data1 = Parser.parse(Files.readString(Paths.get(filepath1)));
+        Map<String, Object> data2 = Parser.parse(Files.readString(Paths.get(filepath2)));
+
+        return generateDiff(data1, data2);
     }
 
-    public static String generate(String filepath1, String filepath2, String format) throws Exception {
-        String fileType1 = getFileType(filepath1);
-        String fileType2 = getFileType(filepath2);
+    private static String generateDiff(Map<String, Object> data1, Map<String, Object> data2) {
+        StringBuilder result = new StringBuilder();
+        result.append("{\n");
 
-        Map<String, Object> data1 = Parser.parse(Files.readString(Paths.get(filepath1)), fileType1);
-        Map<String, Object> data2 = Parser.parse(Files.readString(Paths.get(filepath2)), fileType2);
+        for (String key : data1.keySet()) {
+            if (!data2.containsKey(key)) {
+                result.append("  - ").append(key).append(": ").append(data1.get(key)).append("\n");
+            } else if (!data1.get(key).equals(data2.get(key))) {
+                result.append("  - ").append(key).append(": ").append(data1.get(key)).append("\n");
+                result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n");
+            }
+        }
 
-        var diff = DiffGenerator.genDiff(data1, data2);
-        return FormatterFactory.getFormatter(format).format(diff);
-    }
+        for (String key : data2.keySet()) {
+            if (!data1.containsKey(key)) {
+                result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n");
+            }
+        }
 
-    private static String getFileType(String filepath) {
-        return filepath.substring(filepath.lastIndexOf(".") + 1);
+        result.append("}");
+        return result.toString();
     }
 }
