@@ -1,74 +1,43 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     application
-    java
+    jacoco
     id("checkstyle")
-    id("jacoco")
+    id("io.freefair.lombok") version "8.6"
+    id("com.github.ben-manes.versions") version "0.50.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-application {
-    mainClass.set("hexlet.code.App")
-}
+group = "io.hexlet"
 
-group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+application { mainClass.set("hexlet.code.App") }
+
+repositories { mavenCentral() }
 
 dependencies {
+    implementation("org.apache.commons:commons-lang3:3.14.0")
+    implementation("org.apache.commons:commons-collections4:4.4")
+
+    // Add missing dependencies
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
     implementation("info.picocli:picocli:4.7.0")
-    implementation("org.jetbrains:annotations:24.0.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0") // Required for @ParameterizedTest
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks {
-    test {
-        useJUnitPlatform()
-        jvmArgs("--enable-preview")
-        testLogging {
-            events("passed", "skipped", "failed")
-            showStandardStreams = true
-        }
-    }
-
-    withType<JavaCompile>().configureEach {
-        options.compilerArgs.addAll(listOf("--enable-preview", "-Xlint:unchecked"))
-    }
-
-    jacocoTestReport {
-        dependsOn(test)
-        reports {
-            xml.required.set(true)
-            html.required.set(true)
-        }
-    }
-
-    val cleanReports by creating(Delete::class) {
-        group = "cleanup"
-        description = "Cleans up old test and coverage reports"
-        delete("build/reports", "build/test-results")
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+        showStandardStreams = true
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}
-
-checkstyle {
-    toolVersion = "10.12.0"
-    configFile = file("config/checkstyle/checkstyle.xml") // Make sure this file exists!
-}
-
-tasks.register("runTests") {
-    dependsOn("clean", "test")
-    description = "Clean build and run all tests"
-    group = "verification"
-}
+tasks.jacocoTestReport { reports { xml.required.set(true) } }

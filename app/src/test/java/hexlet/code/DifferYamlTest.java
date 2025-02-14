@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 
 class DifferYamlTest {
 
-    private static final String FIXTURES_PATH = "src/test/resources/fixtures/";
+    private static final String FIXTURES_PATH = "src/test/resources/";
 
     @Test
     void testGenerateYaml() throws Exception {
