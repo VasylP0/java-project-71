@@ -38,3 +38,4 @@ bin/
 # Local-only files (ensure these are truly local!)
 config/
 ion/
+.idea/
