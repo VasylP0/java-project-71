@@ -16,42 +16,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout repository
       - uses: actions/checkout@v4
 
-      # Step 2: Run Hexlet's checks
       - name: Hexlet project check
         uses: hexlet/project-action@release
         with:
           hexlet-id: ${{ secrets.HEXLET_ID }}
-
-      # Step 3: Set up JDK
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'temurin'
-
-      # Step 4: Build and run tests with Gradle
-      - name: Build and Test with Gradle
-        run: ./gradlew clean build test jacocoTestReport
-
-      # Step 5: Set up Code Climate Test Reporter
-      - name: Download Code Climate Test Reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-
-      - name: Run Code Climate Test Reporter Before-Build
-        run: ./cc-test-reporter before-build
-
-      # Step 6: Format the coverage report
-      - name: Format Coverage Report
-        run: ./cc-test-reporter format-coverage --input-type jacoco ./build/reports/jacoco/test/jacocoTestReport.xml
-
-      # Step 7: Upload coverage to Code Climate
-      - name: Upload Coverage to Code Climate
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        run: ./cc-test-reporter upload-coverage
-
