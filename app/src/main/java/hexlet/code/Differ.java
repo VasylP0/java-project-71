@@ -1,38 +1,39 @@
+
 package hexlet.code;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.List;
+
 
 public class Differ {
+    public static String generate(String filepath1, String filepath2, String format) throws Exception {
+        String content1 = readFile(filepath1);
+        String content2 = readFile(filepath2);
 
-    public static String generate(String filepath1, String filepath2) throws Exception {
-        Map<String, Object> data1 = Parser.parse(Files.readString(Paths.get(filepath1)));
-        Map<String, Object> data2 = Parser.parse(Files.readString(Paths.get(filepath2)));
+        String fileFormat1 = getFileType(filepath1);
+        String fileFormat2 = getFileType(filepath2);
 
-        return generateDiff(data1, data2);
+        //распарсили
+        Map<String, Object> file1 = Parser.parse(content1, fileFormat1);
+        Map<String, Object> file2 = Parser.parse(content2, fileFormat2);
+
+        List<Map<String, Object>> compareResult = Contrast.compare(file1, file2);
+        return Formatter.formatterForm(compareResult, format);
     }
+    public static String generate(String filepath1, String filepath2) throws Exception {
+        return generate(filepath1, filepath2, "stylish");
+    }
+    public static String readFile(String filePath) throws Exception {
+        //Читаем содержимое файла
+        var path = Paths.get(filePath).toAbsolutePath().normalize();
+        return Files.readString(path).trim();
+    }
+    private static String getFileType(String filePath) {
+        // возвращает расширение файла, split разделяем файл по точке
+        String[] expansion = filePath.split("\\.");
 
-    private static String generateDiff(Map<String, Object> data1, Map<String, Object> data2) {
-        StringBuilder result = new StringBuilder();
-        result.append("{\n");
-
-        for (String key : data1.keySet()) {
-            if (!data2.containsKey(key)) {
-                result.append("  - ").append(key).append(": ").append(data1.get(key)).append("\n");
-            } else if (!data1.get(key).equals(data2.get(key))) {
-                result.append("  - ").append(key).append(": ").append(data1.get(key)).append("\n");
-                result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n");
-            }
-        }
-
-        for (String key : data2.keySet()) {
-            if (!data1.containsKey(key)) {
-                result.append("  + ").append(key).append(": ").append(data2.get(key)).append("\n");
-            }
-        }
-
-        result.append("}");
-        return result.toString();
+        return expansion[expansion.length - 1];
     }
 }

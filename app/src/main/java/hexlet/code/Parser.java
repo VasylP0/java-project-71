@@ -1,22 +1,22 @@
+
 package hexlet.code;
 
+import java.io.IOException;
+import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
 
 public class Parser {
+    public static Map<String, Object> parse(String content, String format) throws IOException {
+        //парсим файл. вызвать две разные библиотеки
+        // смотря какой формат будет передан,нужно выбрать один из разных парсеров которые уже там и их распарсить
 
-    public static Map<String, Object> parse(String filePath) throws Exception {
-        String content = Files.readString(Path.of(filePath));
-        ObjectMapper objectMapper = getObjectMapper(filePath);
-        return objectMapper.readValue(content, Map.class);
-    }
-
-    private static ObjectMapper getObjectMapper(String filePath) {
-        return filePath.endsWith(".yaml") || filePath.endsWith(".yml")
-                ? new ObjectMapper(new YAMLFactory())
-                : new ObjectMapper();
+        ObjectMapper mapper = switch (format) {
+            case "json" -> new ObjectMapper();
+            case "yaml", "yml" -> new ObjectMapper(new YAMLFactory());
+            default -> throw new UnsupportedOperationException();
+        };
+        return mapper.readValue(content, new TypeReference<Map<String, Object>>() { });
     }
 }

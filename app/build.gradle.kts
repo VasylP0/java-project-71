@@ -10,23 +10,29 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "io.hexlet"
-
+group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
 application { mainClass.set("hexlet.code.App") }
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
+    // Apache Commons
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-collections4:4.4")
 
-    // Add missing dependencies
+    // JSON & YAML Processing (Jackson)
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
-    implementation("info.picocli:picocli:4.7.0")
 
+    // Command-line argument parsing
+    implementation("info.picocli:picocli:4.7.0")
+    annotationProcessor("info.picocli:picocli-codegen:4.7.0")
+
+    // JUnit for testing
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -40,4 +46,8 @@ tasks.test {
     }
 }
 
-tasks.jacocoTestReport { reports { xml.required.set(true) } }
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+    }
+}
