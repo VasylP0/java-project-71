@@ -1,6 +1,4 @@
-# Makefile in app/
-
-.PHONY: build test clean
+.PHONY: build test clean setup
 
 build:
 	./gradlew clean build
@@ -13,3 +11,6 @@ coverage:
 
 clean:
 	./gradlew clean
+
+setup:
+	./gradlew build
