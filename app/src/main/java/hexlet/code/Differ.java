@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,14 +25,14 @@ public class Differ {
         JsonNode json2 = mapper.readTree(Files.readString(path2));
 
         // Compute the differences
-        Map<String, Object> diffResult = computeDiff(json1, json2);
+        List<Map<String, Object>> diffResult = computeDiff(json1, json2);
 
         // Convert the diff result back to a JSON string
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(diffResult);
     }
 
-    private static Map<String, Object> computeDiff(JsonNode json1, JsonNode json2) {
-        Map<String, Object> diffMap = new LinkedHashMap<>();
+    private static List<Map<String, Object>> computeDiff(JsonNode json1, JsonNode json2) {
+        List<Map<String, Object>> diffList = new ArrayList<>();
         Set<String> allKeys = new TreeSet<>();
 
         json1.fieldNames().forEachRemaining(allKeys::add);
@@ -43,20 +44,33 @@ public class Differ {
 
             if (keyInJson1 && keyInJson2) {
                 if (json1.get(key).equals(json2.get(key))) {
-                    diffMap.put(key, Map.of("status", "unchanged", "value", json1.get(key)));
+                    diffList.add(Map.of(
+                            "key", key,
+                            "status", "unchanged",
+                            "value", json1.get(key)
+                    ));
                 } else {
-                    diffMap.put(key, Map.of(
+                    diffList.add(Map.of(
+                            "key", key,
                             "status", "changed",
                             "value1", json1.get(key),
                             "value2", json2.get(key)
                     ));
                 }
             } else if (keyInJson1) {
-                diffMap.put(key, Map.of("status", "removed", "value", json1.get(key)));
+                diffList.add(Map.of(
+                        "key", key,
+                        "status", "removed",
+                        "value", json1.get(key)
+                ));
             } else {
-                diffMap.put(key, Map.of("status", "added", "value", json2.get(key)));
+                diffList.add(Map.of(
+                        "key", key,
+                        "status", "added",
+                        "value", json2.get(key)
+                ));
             }
         }
-        return diffMap;
+        return diffList;
     }
 }
