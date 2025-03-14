@@ -1,4 +1,4 @@
-.PHONY: build test clean setup
+.PHONY: build test clean setup coverage
 
 build:
 	./gradlew clean build
