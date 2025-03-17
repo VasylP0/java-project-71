@@ -1,28 +1,40 @@
-# Set SHELL to ensure consistency across environments
-SHELL := /bin/bash
+.DEFAULT_GOAL := build
 
-# Define the correct app directory (no `code/`)
-APP_DIR := .
-
-# Setup project dependencies
-setup:
-	cd $(APP_DIR) && ./gradlew clean installDist
+# Clean the project
+clean:
+	./gradlew clean
 
 # Build the project
 build:
-	cd $(APP_DIR) && ./gradlew clean build
+	./gradlew clean build
+
+# Install distribution (Fixes Hexlet's 'install' task issue)
+install-dist:
+	./gradlew clean installDist
+
+# Run the project
+run:
+	./gradlew run
 
 # Run tests
 test:
-	cd $(APP_DIR) && ./gradlew test
+	./gradlew test
+
+# Generate coverage report (Fixes Hexlet's 'no rule to make target coverage' error)
+coverage:
+	./gradlew jacocoTestReport
 
 # Run linting (Checkstyle)
 lint:
-	cd $(APP_DIR) && ./gradlew checkstyleMain checkstyleTest
+	./gradlew checkstyleMain checkstyleTest
 
-# Run full pipeline (build + test + lint)
-ci: build test lint
+# Run Checkstyle only
+checkstyle:
+	./gradlew checkstyle
 
-# Clean build files
-clean:
-	cd $(APP_DIR) && ./gradlew clean
+# Generate test reports
+report:
+	./gradlew report
+
+# Ensure Makefile runs by default with `build`
+.PHONY: build
