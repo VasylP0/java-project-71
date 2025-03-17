@@ -1,8 +1,8 @@
-# Set SHELL to ensure consistency across different environments
+# Set SHELL to ensure consistency across environments
 SHELL := /bin/bash
 
-# Define variables
-APP_DIR := app
+# Define the correct app directory (no `code/`)
+APP_DIR := .
 
 # Setup project dependencies
 setup:
