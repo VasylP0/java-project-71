@@ -13,4 +13,5 @@ clean:
 	./gradlew clean
 
 setup:
-	./gradlew build
+    cd code/app && ./gradlew clean installDist
+
