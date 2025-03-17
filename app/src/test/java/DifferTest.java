@@ -4,32 +4,34 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DifferTest {
     @Test
     void testToJsonInJson() throws Exception {
-        // Get absolute paths for test files
-        String file1 = Paths.get("src/test/resources/file1.json").toAbsolutePath().toString();
-        String file2 = Paths.get("src/test/resources/file2.json").toAbsolutePath().toString();
+        // Load file paths correctly
+        Path file1Path = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("file1.json")).toURI());
+        Path file2Path = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("file2.json")).toURI());
+        Path expectedPath = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("result.json")).toURI());
 
-        // Call generate method
-        String actual = Differ.generate(file1, file2);
+        // Read the actual JSON content
+        String file1Content = Files.readString(file1Path);
+        String file2Content = Files.readString(file2Path);
+        String expectedContent = Files.readString(expectedPath);
 
-        // Load expected output from file
-        Path expectedPath = Paths.get("src/test/resources/result.json").toAbsolutePath();
-        String expected = Files.readString(expectedPath);
+        // Call generate method with FILE PATHS, not JSON content
+        String actual = Differ.generate(file1Path.toString(), file2Path.toString());
 
-        // Convert JSON strings to JsonNode for comparison
+        // Convert JSON strings to JsonNode for structured comparison
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode expectedJson = mapper.readTree(expected);
+        JsonNode expectedJson = mapper.readTree(expectedContent);
         JsonNode actualJson = mapper.readTree(actual);
 
-        // Assert JSON structure equality
-        assertEquals(expectedJson, actualJson);
+        // Assert JSON equality
+        assertEquals(expectedJson, actualJson, "Differ.generate() output does not match expected JSON.");
     }
 }
