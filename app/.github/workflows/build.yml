@@ -1,8 +1,41 @@
-- name: Upload Code Coverage to CodeClimate
-  uses: paambaati/codeclimate-action@v5.0.0
-  env:
-    CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-  with:
-    coverageCommand: make coverage
-    coverageLocations: ${{ github.workspace }}/code/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
-# Updated GitHub Actions workflow
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install Dependencies & Build
+        run: |
+          cd app
+          ./gradlew clean installDist
+
+      - name: Run Tests
+        run: |
+          cd app
+          ./gradlew test
+
+      - name: Upload Code Coverage to CodeClimate
+        uses: paambaati/codeclimate-action@v5.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make coverage
+          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
