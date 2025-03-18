@@ -5,3 +5,4 @@
   with:
     coverageCommand: make coverage
     coverageLocations: ${{ github.workspace }}/code/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+# Updated GitHub Actions workflow
