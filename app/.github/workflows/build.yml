@@ -30,19 +30,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Build with Gradle
-        run: ./gradlew clean installDist
+      - name: Build Project
+        run: make build
+
+      - name: Run Linter (Checkstyle)
+        run: make lint
 
       - name: Run Tests
-        run: ./gradlew test
+        run: make test
 
       - name: Generate Code Coverage Report
-        run: ./gradlew jacocoTestReport
+        run: make coverage
 
       - name: Upload Code Coverage to CodeClimate
         uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: ./gradlew jacocoTestReport
+          coverageCommand: make coverage
           coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
