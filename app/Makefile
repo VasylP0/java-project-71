@@ -29,4 +29,7 @@ coverage:
 	./gradlew test
 	./gradlew jacocoTestReport
 
-.PHONY: build clean install-dist run test report lint checkstyle coverage
+setup:
+	./gradlew clean installDist # Fix: Explicitly use installDist
+
+.PHONY: build clean install-dist run test report lint checkstyle coverage setup

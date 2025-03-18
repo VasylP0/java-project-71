@@ -1,51 +1,7 @@
-name: Java CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: 21
-          distribution: 'temurin'
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Build Project
-        run: make build
-
-      - name: Run Linter (Checkstyle)
-        run: make lint
-
-      - name: Run Tests
-        run: make test
-
-      - name: Generate Code Coverage Report
-        run: make coverage
-
-      - name: Upload Code Coverage to CodeClimate
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageCommand: make coverage
-          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+- name: Upload Code Coverage to CodeClimate
+  uses: paambaati/codeclimate-action@v5.0.0
+  env:
+    CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+  with:
+    coverageCommand: make coverage
+    coverageLocations: ${{ github.workspace }}/code/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
