@@ -1,40 +1,32 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := build-run
 
-# Clean the project
 clean:
 	./gradlew clean
 
-# Build the project
 build:
 	./gradlew clean build
 
-# Install distribution (Fixes Hexlet's 'install' task issue)
 install-dist:
 	./gradlew clean installDist
 
-# Run the project
 run:
 	./gradlew run
 
-# Run tests
 test:
 	./gradlew test
 
-# Generate coverage report (Fixes Hexlet's 'no rule to make target coverage' error)
-coverage:
+report:
+	./gradlew test
 	./gradlew jacocoTestReport
 
-# Run linting (Checkstyle)
 lint:
 	./gradlew checkstyleMain checkstyleTest
 
-# Run Checkstyle only
 checkstyle:
-	./gradlew checkstyle
+	./gradlew checkstyleMain
 
-# Generate test reports
-report:
-	./gradlew report
+coverage:
+	./gradlew test
+	./gradlew jacocoTestReport
 
-# Ensure Makefile runs by default with `build`
-.PHONY: build
+.PHONY: build clean install-dist run test report lint checkstyle coverage
