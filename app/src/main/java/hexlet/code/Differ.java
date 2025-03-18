@@ -1,76 +1,99 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import hexlet.code.formatters.Formatter;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class Differ {
-    public static String generate(String filePath1, String filePath2) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
 
+    public static String generate(String filePath1, String filePath2, String format) throws Exception {
         // Convert file paths to absolute paths
         Path path1 = Paths.get(filePath1).toAbsolutePath();
         Path path2 = Paths.get(filePath2).toAbsolutePath();
 
-        // Read the JSON files
-        JsonNode json1 = mapper.readTree(Files.readString(path1));
-        JsonNode json2 = mapper.readTree(Files.readString(path2));
+        // Ensure files exist before proceeding
+        if (!Files.exists(path1) || !Files.exists(path2)) {
+            throw new IllegalArgumentException("Error: One or both input files do not exist.");
+        }
+
+        // Read the JSON/YAML files as strings
+        String content1 = Files.readString(path1);
+        String content2 = Files.readString(path2);
+
+        // Determine the format based on file extension
+        String fileFormat1 = getFileExtension(filePath1);
+        String fileFormat2 = getFileExtension(filePath2);
+
+        if (!isValidFormat(fileFormat1) || !isValidFormat(fileFormat2)) {
+            throw new IllegalArgumentException("Error: Unsupported file format. Only JSON and YAML are supported.");
+        }
+
+        // Parse the files into Maps
+        Map<String, Object> data1 = Parser.parse(content1, fileFormat1);
+        Map<String, Object> data2 = Parser.parse(content2, fileFormat2);
 
         // Compute the differences
-        List<Map<String, Object>> diffResult = computeDiff(json1, json2);
+        List<Map<String, Object>> diffResult = computeDiff(data1, data2);
 
-        // Convert the diff result back to a JSON string
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(diffResult);
+        // Format the result using the selected format (stylish, plain, json)
+        return Formatter.format(diffResult, format);
     }
 
-    private static List<Map<String, Object>> computeDiff(JsonNode json1, JsonNode json2) {
-        List<Map<String, Object>> diffList = new ArrayList<>();
-        Set<String> allKeys = new TreeSet<>();
+    // Overloaded method for default format (stylish)
+    public static String generate(String filePath1, String filePath2) throws Exception {
+        return generate(filePath1, filePath2, "stylish");
+    }
 
-        json1.fieldNames().forEachRemaining(allKeys::add);
-        json2.fieldNames().forEachRemaining(allKeys::add);
+    private static List<Map<String, Object>> computeDiff(Map<String, Object> data1, Map<String, Object> data2) {
+        List<Map<String, Object>> diffList = new ArrayList<>();
+        Set<String> allKeys = new TreeSet<>(data1.keySet());
+        allKeys.addAll(data2.keySet());
 
         for (String key : allKeys) {
-            boolean keyInJson1 = json1.has(key);
-            boolean keyInJson2 = json2.has(key);
+            Map<String, Object> diffEntry = new LinkedHashMap<>();
 
-            if (keyInJson1 && keyInJson2) {
-                if (json1.get(key).equals(json2.get(key))) {
-                    diffList.add(Map.of(
-                            "key", key,
-                            "status", "unchanged",
-                            "value", json1.get(key)
-                    ));
+            boolean keyInData1 = data1.containsKey(key);
+            boolean keyInData2 = data2.containsKey(key);
+
+            if (keyInData1 && keyInData2) {
+                Object value1 = data1.get(key);
+                Object value2 = data2.get(key);
+
+                if (Objects.equals(value1, value2)) {
+                    diffEntry.put("key", key);
+                    diffEntry.put("status", "unchanged");
+                    diffEntry.put("value", value1);
                 } else {
-                    diffList.add(Map.of(
-                            "key", key,
-                            "status", "changed",
-                            "value1", json1.get(key),
-                            "value2", json2.get(key)
-                    ));
+                    diffEntry.put("key", key);
+                    diffEntry.put("status", "updated");
+                    diffEntry.put("value1", value1);
+                    diffEntry.put("value2", value2);
                 }
-            } else if (keyInJson1) {
-                diffList.add(Map.of(
-                        "key", key,
-                        "status", "removed",
-                        "value", json1.get(key)
-                ));
+            } else if (keyInData1) {
+                diffEntry.put("key", key);
+                diffEntry.put("status", "removed");
+                diffEntry.put("value", data1.get(key));
             } else {
-                diffList.add(Map.of(
-                        "key", key,
-                        "status", "added",
-                        "value", json2.get(key)
-                ));
+                diffEntry.put("key", key);
+                diffEntry.put("status", "added");
+                diffEntry.put("value", data2.get(key));
             }
+
+            diffList.add(diffEntry);
         }
+
         return diffList;
+    }
+
+    private static String getFileExtension(String filePath) {
+        int lastIndex = filePath.lastIndexOf(".");
+        return (lastIndex == -1 || lastIndex == filePath.length() - 1) ? "" : filePath.substring(lastIndex + 1);
+    }
+
+    private static boolean isValidFormat(String format) {
+        return format.equalsIgnoreCase("json") || format.equalsIgnoreCase("yml") || format.equalsIgnoreCase("yaml");
     }
 }
