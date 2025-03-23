@@ -30,7 +30,6 @@ coverage:
 	./gradlew jacocoTestReport
 
 setup:
-	./gradlew clean installDist # Fix: Explicitly use installDist
+	./gradlew clean installDist # Corrected to use installDist for applications
 
 .PHONY: build clean install-dist run test report lint checkstyle coverage setup
-# Updated Makefile
