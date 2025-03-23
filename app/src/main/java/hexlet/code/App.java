@@ -1,16 +1,38 @@
 package hexlet.code;
 
-public class App {
-    public static void main(String[] args) throws Exception {
-        if (args.length < 2) {
-            System.out.println("Usage: java -jar app.jar <file1> <file2>");
-            return;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Option;
+
+@Command(name = "gendiff",
+        mixinStandardHelpOptions = true,
+        version = "gendiff 1.0",
+        description = "Compares two configuration files and shows a difference.")
+public final class App implements Runnable {
+
+    @Parameters(index = "0", paramLabel = "file1", description = "Path to the first file")
+    private String filePath1;
+
+    @Parameters(index = "1", paramLabel = "file2", description = "Path to the second file")
+    private String filePath2;
+
+    @Option(names = { "-f", "--format" }, defaultValue = "stylish", paramLabel = "format",
+            description = "Output format [default: ${DEFAULT-VALUE}]")
+    private String format;
+
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new App()).execute(args);
+        System.exit(exitCode);
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println(Differ.generate(filePath1, filePath2, format));
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            System.exit(1);
         }
-
-        String filepath1 = args[0];
-        String filepath2 = args[1];
-
-        // Removed third "format" argument to match the correct method signature
-        System.out.println(Differ.generate(filepath1, filepath2));
     }
 }

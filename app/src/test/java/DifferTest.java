@@ -14,13 +14,11 @@ class DifferTest {
 
     @Test
     void testToJsonInJson() throws Exception {
-        // Load file paths dynamically to ensure compatibility in all environments
+        // Load file paths dynamically
         Path file1Path = Path.of(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("file1.json")).toURI());
-
         Path file2Path = Path.of(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("file2.json")).toURI());
-
         Path expectedPath = Path.of(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("result.json")).toURI());
 
@@ -30,14 +28,17 @@ class DifferTest {
         String expectedContent = Files.readString(expectedPath);
 
         // Call generate method
-        String actual = Differ.generate(file1Path.toString(), file2Path.toString());
+        String actual = Differ.generate(file1Path.toString(), file2Path.toString(), "json");
+
+        // 🔍 Debugging: Print actual JSON output before parsing
+        System.out.println("Generated JSON Output:\n" + actual);
 
         // Convert JSON strings to JsonNode for structured comparison
         ObjectMapper mapper = new ObjectMapper();
         JsonNode expectedJson = mapper.readTree(expectedContent);
         JsonNode actualJson = mapper.readTree(actual);
 
-        // Assert JSON equality with clear error message
+        // Assert JSON equality
         assertEquals(
                 expectedJson,
                 actualJson,

@@ -68,7 +68,7 @@ public class Differ {
                     diffEntry.put("value", value1);
                 } else {
                     diffEntry.put("key", key);
-                    diffEntry.put("status", "updated");
+                    diffEntry.put("status", "changed");
                     diffEntry.put("value1", value1);
                     diffEntry.put("value2", value2);
                 }

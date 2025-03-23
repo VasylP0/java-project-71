@@ -1,4 +1,3 @@
-
 setting1: Some value
 setting2: 200
 setting3: true
@@ -14,7 +13,7 @@ numbers2:
   - 4
   - 5
 id: 45
-default: null
+default:  # Removed `null`, now it's an empty key (matches his file)
 checked: false
 numbers3:
   - 3
