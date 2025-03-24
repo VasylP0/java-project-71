@@ -2,16 +2,16 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class AppTest {
     @Test
     void testFileLoading() throws IOException {
         // Load files safely
-        Path path1 = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("file1.json")).getPath());
-        Path path2 = Path.of(Objects.requireNonNull(getClass().getClassLoader().getResource("file2.json")).getPath());
+        Path path1 = Path.of(getClass().getClassLoader().getResource("file1.json").getPath());
+        Path path2 = Path.of(getClass().getClassLoader().getResource("file2.json").getPath());
 
         // Read content
         String file1 = Files.readString(path1);

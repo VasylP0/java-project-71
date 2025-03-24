@@ -1,29 +1,30 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.formatters.Formatter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Differ {
 
     public static String generate(String filePath1, String filePath2, String format) throws Exception {
-        // Convert file paths to absolute paths
         Path path1 = Paths.get(filePath1).toAbsolutePath();
         Path path2 = Paths.get(filePath2).toAbsolutePath();
 
-        // Ensure files exist before proceeding
         if (!Files.exists(path1) || !Files.exists(path2)) {
             throw new IllegalArgumentException("Error: One or both input files do not exist.");
         }
 
-        // Read the JSON/YAML files as strings
         String content1 = Files.readString(path1);
         String content2 = Files.readString(path2);
 
-        // Determine the format based on file extension
         String fileFormat1 = getFileExtension(filePath1);
         String fileFormat2 = getFileExtension(filePath2);
 
@@ -31,18 +32,14 @@ public class Differ {
             throw new IllegalArgumentException("Error: Unsupported file format. Only JSON and YAML are supported.");
         }
 
-        // Parse the files into Maps
         Map<String, Object> data1 = Parser.parse(content1, fileFormat1);
         Map<String, Object> data2 = Parser.parse(content2, fileFormat2);
 
-        // Compute the differences
         List<Map<String, Object>> diffResult = computeDiff(data1, data2);
 
-        // Format the result using the selected format (stylish, plain, json)
         return Formatter.format(diffResult, format);
     }
 
-    // Overloaded method for default format (stylish)
     public static String generate(String filePath1, String filePath2) throws Exception {
         return generate(filePath1, filePath2, "stylish");
     }
