@@ -12,7 +12,9 @@ plugins {
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
-application { mainClass.set("hexlet.code.App") }
+application {
+    mainClass.set("hexlet.code.App")
+}
 
 repositories {
     mavenCentral()
@@ -45,9 +47,14 @@ tasks.test {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.8"
+}
+
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
     reports {
         xml.required.set(true)
+        html.required.set(false)
     }
 }
-// Updated build.gradle.kts
