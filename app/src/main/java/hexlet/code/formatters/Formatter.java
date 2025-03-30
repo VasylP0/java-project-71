@@ -5,13 +5,19 @@ import java.util.Map;
 
 public class Formatter {
     public static String format(List<Map<String, Object>> data, String format) throws Exception {
+        if (format == null) {
+            throw new IllegalArgumentException("Format cannot be null");
+        }
+
         switch (format.toLowerCase()) {
-            case "json":
-                return Json.formatJson(data);
+            case "stylish":
+                return Stylish.formatStylish(data);
             case "plain":
                 return Plain.formatPlain(data);
+            case "json":
+                return Json.formatJson(data);
             default:
-                return Stylish.formatStylish(data);
+                throw new IllegalArgumentException("Unsupported format: " + format);
         }
     }
 }
