@@ -27,15 +27,13 @@ jobs:
           cd app
           ./gradlew clean installDist
 
-      - name: Run Tests
+      - name: Run Tests with Coverage
         run: |
           cd app
-          ./gradlew test
+          ./gradlew test jacocoTestReport
 
-      - name: Upload Code Coverage to CodeClimate
-        uses: paambaati/codeclimate-action@v5.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - name: Upload Code Coverage to qlty.sh
+        uses: qltysh/qlty-action/coverage@main
         with:
-          coverageCommand: make coverage
-          coverageLocations: ${{ github.workspace }}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+          coverage-token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: app/build/reports/jacoco/test/jacocoTestReport.xml
