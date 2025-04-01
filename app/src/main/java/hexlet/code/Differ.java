@@ -26,9 +26,7 @@ public class Differ {
         String fileFormat1 = getFileExtension(filePath1);
         String fileFormat2 = getFileExtension(filePath2);
 
-        if (!isValidFormat(fileFormat1) || !isValidFormat(fileFormat2)) {
-            throw new IllegalArgumentException("Error: Unsupported file format. Only JSON and YAML are supported.");
-        }
+        // File format validation removed based on review feedback
 
         Map<String, Object> data1 = Parser.parse(content1, fileFormat1);
         Map<String, Object> data2 = Parser.parse(content2, fileFormat2);
@@ -47,11 +45,5 @@ public class Differ {
         return (lastIndex == -1 || lastIndex == filePath.length() - 1)
                 ? ""
                 : filePath.substring(lastIndex + 1);
-    }
-
-    private static boolean isValidFormat(String format) {
-        return format.equalsIgnoreCase("json")
-                || format.equalsIgnoreCase("yml")
-                || format.equalsIgnoreCase("yaml");
     }
 }
