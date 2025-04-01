@@ -13,6 +13,7 @@ public class Parser {
             case "yaml", "yml" -> new ObjectMapper(new YAMLFactory());
             default -> throw new UnsupportedOperationException("Unsupported format: " + format);
         };
-        return mapper.readValue(content, new TypeReference<>() {});
+        return mapper.readValue(content, new TypeReference<>() {
+        });
     }
 }
